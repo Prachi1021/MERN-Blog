@@ -38,7 +38,7 @@ export default function Header() {
 
         <Link to="/sign-in"
         className='h-10'>
-          <Button gradientDuoTone="purpleToBlue" style={{marginTop: "auto", marginBottom: 'auto'}}>
+          <Button gradientDuoTone="purpleToBlue" outline>
             Sign In
           </Button>
 .
