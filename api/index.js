@@ -24,3 +24,15 @@ app.listen(3000, () => {
 
 app.use('/api/user', userRoutes);
 app.use('/api/auth', authRoutes);
+
+
+//middleware.......... err-error in input, next-to go to next middleware
+app.use((err, req, res, next) =>{
+    const statusCode = err.statusCode || 500;
+    const message = err.message || 'Internal message error';
+    res.status(statusCode).json({
+        success:false,
+        statusCode,
+        message,
+    });
+});
