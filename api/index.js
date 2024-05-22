@@ -34,5 +34,5 @@ app.use((err, req, res, next) =>{
         success:false,
         statusCode,
         message,
-    });
+    }); 
 });
