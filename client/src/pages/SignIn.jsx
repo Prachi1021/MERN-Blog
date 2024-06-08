@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react'
 import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import OAuth from '../components/OAuth';
 
 export default function SignIn() {
 
@@ -16,7 +17,7 @@ export default function SignIn() {
   // const [errorMessage, setErrorMessage] = useState(null); //any type of error
   // const [loading, setLoading] = useState(false); //loading effect due to low network connectivity
 
-  const {loading, error: errorMessage} = useSelector(state => state.user);
+  const { loading, error: errorMessage } = useSelector(state => state.user);
 
   const dispatch = useDispatch(); //to dispatch signinstart,success,failure
 
@@ -119,6 +120,8 @@ export default function SignIn() {
                 ) : 'Sign In'
               }
             </Button>
+
+            <OAuth />
 
           </form>
 

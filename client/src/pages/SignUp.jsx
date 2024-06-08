@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import { Link, useNavigate} from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react'
+import OAuth from '../components/OAuth';
 
 export default function SignUp() {
 
@@ -25,28 +26,28 @@ export default function SignUp() {
   const handleSubmit = async (e) => { // async used as submitting to database takes time so we use await
     e.preventDefault(); //avoids refreshing of page as we click on signup button
 
-    if(!formData.username || !formData.email || !formData.password){
-      return setErrorMessage('Please fill out all the fields'); 
+    if (!formData.username || !formData.email || !formData.password) {
+      return setErrorMessage('Please fill out all the fields');
     }
-    
+
     //for submitting data
     try {
       setLoading(true);
       setErrorMessage(null);
 
       const res = await fetch('api/auth/signup', {         //fetch to fetch data
-        method : 'POST',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' }, //get headers in the json form
         body: JSON.stringify(formData), //to convert json into string data format
       });
-      
+
       const data = await res.json(); //convert to data 
 
-      if(data.success === false){
+      if (data.success === false) {
         return setErrorMessage(data.message);
       }
 
-      if(res.ok){
+      if (res.ok) {
         navigate('/sign-in')
       }
 
@@ -56,7 +57,7 @@ export default function SignUp() {
     } catch (error) {
       setErrorMessage(error.message); //client side error
       setLoading(false);
-      
+
     }
 
   }
@@ -108,16 +109,18 @@ export default function SignUp() {
                 onChange={handleChange} />
             </div>
 
-            <Button gradientDuoTone="purpleToPink" type='submit' disabled={loading}> 
-            {
-              loading ? (
-                <>
-                <Spinner size='sm'/>
-                <span className='pl-3'>Loading...</span> 
-                </>  //more than 1 html elements in () so add <>
-              ) : 'Sign Up'
-            }
+            <Button gradientDuoTone="purpleToPink" type='submit' disabled={loading}>
+              {
+                loading ? (
+                  <>
+                    <Spinner size='sm' />
+                    <span className='pl-3'>Loading...</span>
+                  </>  //more than 1 html elements in () so add <>
+                ) : 'Sign Up'
+              }
             </Button>
+
+            <OAuth />
 
           </form>
 
