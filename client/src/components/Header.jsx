@@ -34,12 +34,12 @@ export default function Header() {
         />
       </form>
 
-      <Button className='w-12 h-10 lg:hidden' color="gray" pill>
+      <Button className='w-12 h-10 lg:hidden items-center' color="gray" pill>
         <AiOutlineSearch/>
       </Button>
 
-      <div className='flex gap-2  md:order-2 items-center justify-center'>
-        <Button className='w-12 h-10 hidden sm:inline' color="gray" pill onClick={() => dispatch(toggleTheme())}>
+      <div className='flex gap-2 md:order-2 '>
+        <Button className='w-12 h-10 items-center' color="gray" pill onClick={() => dispatch(toggleTheme())}>
           {theme === 'light' ? <FaMoon/> : <FaSun/>}
         </Button>
 
