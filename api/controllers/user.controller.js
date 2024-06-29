@@ -3,12 +3,12 @@ import { errorHandler } from "../utils/error.js";
 import bcryptjs from 'bcryptjs'
 
 export const test = (req, res) => {
-    res.json({ message: "API is working" });
+    res.json({ message: 'API is working' });
 };
 
 export const updateUser = async (req, res, next) => {
-    if (req.user.id !== req.params.userId) {
-        return next(errorHandler(403, 'You cannot update the user'));
+    if (req.user.id !== req.params.userId) {  //id as fetcching cookie id was used not _id in auth.controller
+        return next(errorHandler(403, 'You cannot update this user'));
     }
     if (req.body.password) {
         if (req.body.password.length < 6) {
@@ -16,35 +16,34 @@ export const updateUser = async (req, res, next) => {
         }
         req.body.password = bcryptjs.hashSync(req.body.password, 10);
     }
-    if(req.body.username){
-        if(req.body.username < 7 || req.body.username >20){
-            return next(errorHandler(400,'Username must be between 7 to 20 characters'));
+    if (req.body.username) {
+        if (req.body.username.length < 7 || req.body.username.length > 20) {
+            return next(errorHandler(400, 'Username must be between 7 to 20 characters'));
         }
-        if(req.body.username.includes(' ')){
-            return next(errorHandler(400,'Username must not contain any space'));
+        if (req.body.username.includes(' ')) {
+            return next(errorHandler(400, 'Username must not contain any space'));
         }
-        if(req.body.username !== req.body.username.toLowerCase()){
-            return next(errorHandler(400,'Username must be in lower case'));
+        if (req.body.username !== req.body.username.toLowerCase()) {
+            return next(errorHandler(400, 'Username must be in lower case'));
         }
-        if(!req.body.username.match(/^[a-zA-Z0-9]+$/)){
-            return next(errorHandler(400,'Username must contain letters and digits'));
+        if (!req.body.username.match(/^[a-zA-Z0-9]+$/)) {
+            return next(errorHandler(400, 'Username must contain letters and digits'));
         }
     }
-
     try {
         const updatedUser = await User.findByIdAndUpdate(req.params.userId, {
-            $set:{
+            $set: {
                 username: req.body.username,
                 email: req.body.email,
                 profilePicture: req.body.profilePicture,
                 password: req.body.password,
-            }
+            },
         },
-        {new : true}
-    );
+            { new: true } //sends new info
+        );
 
-    const { password, ...rest} = updatedUser._doc;
-    res.status(200).json(rest);
+        const { password, ...rest } = updatedUser._doc;
+        res.status(200).json(rest);
     } catch (error) {
         next(error);
     }

@@ -16,5 +16,4 @@ export const verifyToken = (req, res, next) => {
         req.user = user; //get user data from cookie
         next(); // next func pr jaane k liye(updateUser)
     });
-
 }
