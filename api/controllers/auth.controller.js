@@ -59,7 +59,7 @@ export const signin = async (req, res, next) => {
 
         //to authenticate the user- jwt is used--
         const token = jwt.sign(  //whatever we're adding, should be encrypted
-            {id: validUser._id},  //to save in cookie this _id will be saved but in hashed form to latr authenticate the user
+            {id: validUser._id, isAdmin: validUser.isAdmin},  //to save in cookie this _id will be saved but in hashed form to latr authenticate the user
 
             process.env.JWT_SECRET // got one time sessions
         );
@@ -87,7 +87,7 @@ export const google = async (req, res, next) => {
 
         if(user){
             const token = jwt.sign(
-                {id: user._id},
+                {id: user._id, isAdmin: user.isAdmin},
                 process.env.JWT_SECRET
             );
 
@@ -108,7 +108,7 @@ export const google = async (req, res, next) => {
             });
             await newUser.save();
 
-            const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET);
+            const token = jwt.sign({id: newUser._id, isAdmin: newUser.isAdmin}, process.env.JWT_SECRET);
             const {password, ...rest} = newUser._doc;
             res.status(200).cookie('access_token',token, {
                 httpOnly: true,
