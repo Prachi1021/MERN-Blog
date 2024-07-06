@@ -9,3 +9,6 @@ body{
 .ql-editor{
     font-size: 1.05rem;
 }
+.ql-editor.ql-blank::before{
+    color: rgba(103, 53, 53, 0.6);
+}
