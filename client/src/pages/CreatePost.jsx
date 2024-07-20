@@ -94,6 +94,7 @@ export default function CreatePost() {
             <option value='java'>Java</option>
             <option value='reactjs'>React.js</option>
             <option value='nodejs'>Node.js</option>
+            <option value='python'>Python</option>
           </Select>
         </div>
 
