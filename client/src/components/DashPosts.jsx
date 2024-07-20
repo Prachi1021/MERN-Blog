@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Table } from 'flowbite-react'
+import { Button, Table } from 'flowbite-react'
 import { Link } from 'react-router-dom';
 
 export default function DashPosts() {
   const { currentUser} = useSelector((state) => state.user);
   const [userPosts, setUserPosts] = useState([]);
+  const [showMore, setShowMore] = useState(true);
   console.log(userPosts);
 
   useEffect(()=>{
@@ -16,6 +17,9 @@ export default function DashPosts() {
         
         if(res.ok){
           setUserPosts(data.posts); //made in post.controller 
+          if(data.posts.length < 9 ){
+            setShowMore(false);
+          }
         }
 
       } catch (error) {
@@ -27,6 +31,25 @@ export default function DashPosts() {
     }
 
   }, [currentUser._id]);
+
+  const handleShowMore = async ()=>{
+    const startIndex = userPosts.length;
+
+    try {
+      const res = await fetch(`/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`);
+      const data = await res.json();
+
+      if(res.ok){
+        setUserPosts((prev) => [...prev, ...data.posts]);
+        if(data.posts.length < 9){
+          setShowMore(false);
+        }
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+
+  }
 
   return (
     <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
@@ -50,7 +73,7 @@ export default function DashPosts() {
                 <Table.Cell>
                   <Link to={`/post/${post.slug}`}>
                   <img
-                  src={post.img}
+                  src={post.image}
                   alt={post.title}
                   className='w-20 h-10 object-cover bg-gray-500'
                   />
@@ -78,10 +101,17 @@ export default function DashPosts() {
             </Table.Body>
           ))}
         </Table>
+
+        {showMore && (
+          <button onClick={handleShowMore} className='text-teal-500 w-full self-center py-7 text-sm'>
+            Show More
+          </button>
+        )}
         </>    
       ) : (
         <p>You have no posts yet!!</p>
       )}
+
     </div>
   )
 }
