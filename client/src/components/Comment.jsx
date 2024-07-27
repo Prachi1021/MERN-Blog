@@ -4,7 +4,7 @@ import { FaThumbsUp } from 'react-icons/fa'
 import { useSelector } from 'react-redux';
 import { Button, Textarea } from 'flowbite-react';
 
-export default function Comment({ comment, onLike, onEdit }) {
+export default function Comment({ comment, onLike, onEdit, onDelete }) {
     const [user, setUser] = useState({});
     const { currentUser } = useSelector((state) => state.user);
     const [isEditing, setIsEditing] = useState(false);
@@ -30,12 +30,12 @@ export default function Comment({ comment, onLike, onEdit }) {
         setEditedContent(comment.content);
     }
 
-    const handleSave = async ()=>{
+    const handleSave = async () => {
         try {
             const res = await fetch(`/api/comment/editComment/${comment._id}`,
                 {
                     method: 'PUT',
-                    headers:{
+                    headers: {
                         'Content-Type': 'application/json'
 
                     },
@@ -45,11 +45,11 @@ export default function Comment({ comment, onLike, onEdit }) {
                 }
             );
 
-            if(res.ok){
+            if (res.ok) {
                 setIsEditing(false);
                 onEdit(comment, editedContent);
             }
-            
+
         } catch (error) {
             console.log(error.message)
         }
@@ -77,21 +77,21 @@ export default function Comment({ comment, onLike, onEdit }) {
                             className='mb-2'
                             onChange={(e) => setEditedContent(e.target.value)}
                             value={editedContent} />
-                        
+
                         <div className='flex gap-2 justify-end text-xs'>
-                            <Button size='sm' 
-                            type='button'
-                            gradientDuoTone='purpleToBlue'
-                            onClick={handleSave}>
+                            <Button size='sm'
+                                type='button'
+                                gradientDuoTone='purpleToBlue'
+                                onClick={handleSave}>
                                 Save</Button>
 
                             <Button size='sm'
-                            type='button' 
-                            gradientDuoTone='purpleToBlue' outline
-                            onClick={()=>setIsEditing(false)}>Cancel</Button>
+                                type='button'
+                                gradientDuoTone='purpleToBlue' outline
+                                onClick={() => setIsEditing(false)}>Cancel</Button>
                         </div>
                     </>
-                    
+
                 ) : (
                     <>
                         <p className='pb-2 text-gray-500'>{comment.content}</p>
@@ -109,10 +109,17 @@ export default function Comment({ comment, onLike, onEdit }) {
                             </p>
 
                             {currentUser && (currentUser._id === comment.userId || currentUser.isAdmin) &&
-                                (<button 
-                                onClick={ handleEdit } type='button' className='hover:text-blue-500 text-gray-400'>
-                                    Edit
-                                </button>)
+                                <>
+                                    <button
+                                        onClick={handleEdit} type='button' className='hover:text-blue-500 text-gray-400'>
+                                        Edit
+                                    </button>
+                                    <button
+                                        onClick={()=>onDelete(comment._id)} type='button' className='hover:text-red-500 text-gray-400'>
+                                        Delete
+                                    </button>
+
+                                </>
                             }
                         </div>
                     </>
